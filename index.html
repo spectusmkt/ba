@@ -77,11 +77,7 @@ p{margin:0}
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--plum);color:#fff}
 .top .wrap{display:flex;align-items:center;justify-content:space-between;gap:24px;height:68px}
 .top img{height:30px;width:auto}
-.top nav{display:flex;gap:28px;font-size:.9rem}
-.top nav a{text-decoration:none;color:var(--on-dark-muted);transition:color .2s}
-.top nav a:hover{color:#fff}
 .top .btn{min-height:42px;padding:0 20px;font-size:.88rem}
-@media (max-width:920px){.top nav{display:none}}
 
 /* Hero */
 .hero{background:linear-gradient(180deg,var(--rose-50) 0%,#fff 100%);padding-block:clamp(40px,6vw,80px) clamp(90px,10vw,130px)}
@@ -312,13 +308,6 @@ details[open] .chev{transform:rotate(180deg)}
 <header class="top band">
   <div class="wrap">
     <a href="#inicio" aria-label="Dance Academy — início"><img src="assets/logo-dance-academy.png" alt="Dance Academy" width="117" height="30"></a>
-    <nav aria-label="Seções">
-      <a href="#metodo">Benefícios</a>
-      <a href="#aulas">Aulas</a>
-      <a href="#professora">Professora</a>
-      <a href="#depoimentos">Depoimentos</a>
-      <a href="#duvidas">Dúvidas</a>
-    </nav>
     <a class="btn btn-primary" href="#oferta">Quero começar</a>
   </div>
 </header>
