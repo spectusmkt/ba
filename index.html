@@ -149,6 +149,19 @@ p{margin:0}
 .who .stars{font-size:.8rem;margin-left:6px}
 .who small{display:block;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .stars{color:var(--gold);letter-spacing:1px}
+.car-nav{display:none;justify-content:center;gap:12px;margin-top:20px}
+.car-nav button{width:48px;height:48px;border-radius:50%;border:1.5px solid var(--rose-200);background:#fff;color:var(--rose);cursor:pointer;display:grid;place-items:center;transition:background-color .2s,color .2s}
+.car-nav button:hover{background:var(--rose);color:#fff;border-color:var(--rose)}
+.car-nav svg{width:20px;height:20px}
+/* Desktop: carrossel horizontal com 3 depoimentos por vez */
+@media (min-width:921px){
+  .marquee{height:auto;max-width:none;overflow:visible;-webkit-mask-image:none;mask-image:none}
+  .marquee-track{animation:none;flex-direction:row;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;padding:6px 2px 18px}
+  .marquee-track::-webkit-scrollbar{display:none}
+  .marquee-track [aria-hidden="true"]{display:none}
+  .marquee-track .quote{flex:0 0 calc((100% - 40px)/3);scroll-snap-align:start}
+  .car-nav{display:flex}
+}
 @media (prefers-reduced-motion:reduce){.marquee{overflow-y:auto}.marquee-track{animation:none}.marquee-track [aria-hidden="true"]{display:none}}
 
 /* Aulas */
@@ -357,6 +370,10 @@ details[open] .chev{transform:rotate(180deg)}
         <figure class="quote"><figcaption class="who"><span class="ini" aria-hidden="true">DG</span><span><b>Duda Gugel</b><span class="stars" aria-label="5 estrelas">★★★★★</span><small>Comunidade Class</small></span></figcaption><blockquote>“É tão lindo o palco cheio de dança e amor.”</blockquote></figure>
       </div>
     </div>
+    <div class="car-nav">
+      <button type="button" id="carPrev" aria-label="Depoimento anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <button type="button" id="carNext" aria-label="Próximo depoimento"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+    </div>
   </div>
 </section>
 
@@ -505,6 +522,28 @@ details[open] .chev{transform:rotate(180deg)}
   // Depoimentos: duplica a lista para a rolagem automática ficar contínua
   var track=document.querySelector('.marquee-track');
   if(track){[].slice.call(track.children).forEach(function(c){var k=c.cloneNode(true);k.setAttribute('aria-hidden','true');track.appendChild(k);});}
+  // Desktop: carrossel que passa sozinho, pausa com o mouse em cima
+  var desk=window.matchMedia&&matchMedia('(min-width:921px)');
+  var box=document.querySelector('.marquee');
+  if(track&&box){
+    var paused=false;
+    function step(dir){
+      var card=track.querySelector('.quote');if(!card)return;
+      var w=card.getBoundingClientRect().width+20;
+      var max=track.scrollWidth-track.clientWidth-4;
+      if(dir>0&&track.scrollLeft>=max){track.scrollTo({left:0});}
+      else if(dir<0&&track.scrollLeft<=4){track.scrollTo({left:track.scrollWidth});}
+      else{track.scrollBy({left:dir*w});}
+    }
+    document.getElementById('carNext').addEventListener('click',function(){step(1);});
+    document.getElementById('carPrev').addEventListener('click',function(){step(-1);});
+    box.addEventListener('mouseenter',function(){paused=true;});
+    box.addEventListener('mouseleave',function(){paused=false;});
+    box.addEventListener('focusin',function(){paused=true;});
+    box.addEventListener('focusout',function(){paused=false;});
+    var reduceM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(!reduceM){setInterval(function(){if(desk&&desk.matches&&!paused&&!document.hidden)step(1);},4500);}
+  }
   // Vídeos: carregam e tocam só quando aparecem na tela
   var vids=[].slice.call(document.querySelectorAll('video[data-src]'));
   var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
